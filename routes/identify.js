@@ -1,5 +1,5 @@
 const prisma = require("../prismaClient");
-const { responseFormat } = require("../utils");
+const { responseFormat, getAllPrimary } = require("../utils");
 
 const identify = require("express").Router();
 
@@ -66,8 +66,6 @@ identify.post("/", async (req, res) => {
       },
     });
 
-     console.log(find);
-
     // If there's a matching contact with either email or phoneNumber
     if (find.length) {
       const firstContact = find[0];
@@ -94,8 +92,31 @@ identify.post("/", async (req, res) => {
           return res.send(responseFormat(findAgain));
         }
       }
-      
-     
+      //if length more than one
+      else {
+        const allPrimary = getAllPrimary(find);
+
+        if (allPrimary.length > 1) {
+          const oldestPrimary = allPrimary.shift();
+          await prisma.contact.updateMany({
+            where: {
+              id: { in: allPrimary.map((elm) => elm.id) },
+            },
+            data: {
+              linkedId: oldestPrimary.id,
+              linkPrecedence: "secondary",
+            },
+          });
+          const findAgain = await prisma.contact.findMany({
+            where: {
+              OR: [{ email}, {phoneNumber }],
+            },
+          });
+          return res.send(responseFormat(findAgain));
+        }
+      }
+
+      return res.send(responseFormat(find));
     } 
     // if not present create new entry
     else {

@@ -29,8 +29,12 @@ const responseFormat = (arr) => {
   return response;
 };
 
-
+const getAllPrimary = (arr)=>{
+    const primary = arr.filter(elm => elm.linkPrecedence==="primary");
+    return primary;
+  }
 
 module.exports = {
   responseFormat,
+  getAllPrimary
 };
