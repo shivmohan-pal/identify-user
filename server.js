@@ -16,6 +16,11 @@ app.get("/", (_, res) => {
   res.send("BiteSpeed Assignment");
 });
 
+app.use("*",(_,res)=>{// exceptional handling
+    res.status(404)
+    .send("Please use POST method with /identify route and send Json data, other methods are not allowed")
+})
+
 app.use(ErrorHandler);//application level error handler
 
 app.listen(PORT, () => {
