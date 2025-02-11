@@ -5,5 +5,5 @@ const ErrorHandler = (err,_,res,next)=>{
    }
    
    module.exports = {
-       CreateError,ErrorHandler
+       ErrorHandler
    }
