@@ -23,8 +23,8 @@ const responseFormat = (arr) => {
   if (primary[0].email) response.contact.emails.unshift(primary[0].email);
   if (primary[0].phoneNumber)response.contact.phoneNumbers.unshift(primary[0].phoneNumber);
   
-  response.contact.emails = [...new Set(response.contact.emails)];
-  response.contact.phoneNumbers = [...new Set(response.contact.phoneNumbers)];
+  response.contact.emails = [...new Set(response.contact.emails)].filter(Boolean);
+  response.contact.phoneNumbers = [...new Set(response.contact.phoneNumbers)].filter(Boolean);
   
   return response;
 };
